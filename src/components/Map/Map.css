@@ -6,3 +6,15 @@
     left: 0;
     width: 100%;
 }
+
+.mapboxgl-marker {
+    cursor: pointer;
+}
+
+.user-marker {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background-color: #314ccd;
+    cursor: grab;
+}
