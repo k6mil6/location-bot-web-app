@@ -6,7 +6,7 @@ import './Map.css';
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAP_BOX_API_KEY;
 const URL = import.meta.env.VITE_API_URL;
 
-// const userID = window.Telegram.WebApp.data.initDataUnsafe.user.id;
+//
 
 const Map = () => {
     const [data, setData] = useState({ user: null, locations: [] });
@@ -14,7 +14,9 @@ const Map = () => {
 
 
     useEffect(() => {
-        const userID = 746446622;
+        // const userID = 746446622;
+
+        const userID = window.Telegram.WebApp.data.initDataUnsafe.user.id;
         console.log(`${URL}user?id=${userID}`);
         // Assuming this is static or comes from somewhere outside
         const fetchData = async () => {
@@ -41,6 +43,8 @@ const Map = () => {
                 zoom: 15,
             });
 
+            const bounds = new mapboxgl.LngLatBounds();
+
             // Add marker for the user
             new mapboxgl.Marker({
                 color: '#314ccd'
@@ -49,11 +53,15 @@ const Map = () => {
                 .addClassName('user-marker')
                 .addTo(map);
 
+            bounds.extend(data.user.Coordinates);
+
             // Loop over locations and add each as a marker
             data.locations.forEach(location => {
                 const marker = new mapboxgl.Marker()
                     .setLngLat(location.Coordinates)
                     .addTo(map);
+
+                bounds.extend(location.Coordinates);
 
                 marker.getElement().addEventListener('click', () => {
                     const destination = marker.getLngLat();
@@ -69,6 +77,10 @@ const Map = () => {
                     }
                 });
             });
+
+            map.fitBounds(bounds, {
+                padding: 50,
+            })
         }
     }, [data]);
 
