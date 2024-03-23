@@ -12,8 +12,11 @@ const Map = () => {
     const [data, setData] = useState({ user: null, locations: [] });
     mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
+
     useEffect(() => {
-        const userID = 746446622; // Assuming this is static or comes from somewhere outside
+        const userID = 746446622;
+        console.log(`${URL}user?id=${userID}`);
+        // Assuming this is static or comes from somewhere outside
         const fetchData = async () => {
             try {
                 const response = await fetch(`${URL}user?id=${userID}`);
