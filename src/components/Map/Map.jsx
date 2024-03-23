@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import './Map.css';
 
+
 const MAPBOX_ACCESS_TOKEN = import.meta.env.VITE_MAP_BOX_API_KEY;
 const URL = import.meta.env.VITE_API_URL;
 
@@ -14,25 +15,27 @@ const Map = () => {
 
 
     useEffect(() => {
-        // const userID = 746446622;
+        // Проверяем, доступен ли объект Telegram WebApp
+        if (window.Telegram.WebApp) {
+            // Получаем userID из объекта Telegram WebApp
+            const userID = window.Telegram.WebApp.initDataUnsafe.user.id;
 
-        const userID = window.Telegram.WebApp.data.initDataUnsafe.user.id;
-        console.log(`${URL}user?id=${userID}`);
-        // Assuming this is static or comes from somewhere outside
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`${URL}user?id=${userID}`);
-                const json = await response.json();
-                console.log(json);
-                setData(json); // Update state with the fetched data
-            } catch (error) {
-                console.error(error);
-            }
-        };
+            // Функция для получения данных пользователя
+            const fetchData = async () => {
+                try {
+                    const response = await fetch(`${URL}user?id=${userID}`);
+                    const json = await response.json();
+                    setData(json); // Обновляем состояние данными пользователя
+                } catch (error) {
+                    console.error('Error fetching user data:', error);
+                }
+            };
 
-        fetchData();
+            fetchData();
+        } else {
+            console.error('Telegram WebApp object is not available.');
+        }
     }, []);
-
     useEffect(() => {
         if (data.user) {
             // Only run this code if the `data` state has been set with the fetched data
